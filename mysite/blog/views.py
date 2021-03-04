@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .models import Post
 from .forms import EmailPostForm
-
+from django.core.mail import send_mail
 
 def post_list(request):
     object_list = Post.published.all()
@@ -53,8 +53,8 @@ def post_share(request, post_id):
             cd = form.cleaned_data
             post_url = request.build_absolute_uri(
                 post.get_absolute_url())
-            subject = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post.title)
-            message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(post.title, post_url, cd['name'], cd['comments'])
+            subject = '{} ({}) рекомендует вам прочтитать "{}"'.format(cd['name'], cd['email'], post.title)
+            message = 'Прочитайте статью "{}" перейдя по ссылке {}\n\n{}\' Сообщение: {}'.format(post.title, post_url, cd['name'], cd['comments'])
             send_mail(subject, message, 'pkcrb@bk.ru',
                       [cd['to']])
             sent = True
